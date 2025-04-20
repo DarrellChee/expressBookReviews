@@ -5,9 +5,12 @@ const regd_users = express.Router();
 
 let users = [];
 
-const isValid = (username)=>{ //returns boolean
-//write code to check is the username is valid
-}
+const isValid = inputUsername =>{ //returns boolean
+  return(users.find(user => {
+    return(user.username == inputUsername)
+  }))
+};
+
 
 const authenticatedUser = (username,password)=>{ //returns boolean
 //write code to check if username and password match the one we have in records.
@@ -16,7 +19,15 @@ const authenticatedUser = (username,password)=>{ //returns boolean
 //only registered users can login
 regd_users.post("/login", (req,res) => {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  if(isValid(req.body.username)){
+    res.status(201).json("Welcome " + req.body.username);
+  }else{
+    res.status(301).json("Username not found");
+  }
+});
+
+regd_users.get("/login", (req,res) => {
+  res.status(201).json(users);
 });
 
 // Add a book review
