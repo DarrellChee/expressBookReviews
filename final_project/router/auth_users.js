@@ -5,21 +5,21 @@ const regd_users = express.Router();
 
 let users = [];
 
-const isValid = inputUsername =>{ //returns boolean
-  return(users.find(user => {
-    return(user.username == inputUsername)
-  }))
+const isValid = inputUsername =>{ 
+  // users.find(user => user.username == inputUsername)
 };
 
 
-const authenticatedUser = (username,password)=>{ //returns boolean
-//write code to check if username and password match the one we have in records.
+const authenticatedUser = (username,password)=>{
+  const match = users.find(user => user.username === username && user.password === password);
+  return Boolean(match)
 }
-
 //only registered users can login
+
 regd_users.post("/login", (req,res) => {
   //Write your code here
-  if(isValid(req.body.username)){
+  console.log("first: "+ req.body.username);
+  if(authenticatedUser(req.body.username, req.body.password)){
     res.status(201).json("Welcome " + req.body.username);
   }else{
     res.status(301).json("Username not found");

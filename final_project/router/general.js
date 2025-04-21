@@ -3,26 +3,19 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-
-
-const pushUser = (inputUsername, inputPassword) => {
-  const user = {username : inputUsername , password : inputPassword};
-  return(users.push(user));
-}
+const bycrypt = require('bcryptjs');
 
 
 public_users.post("/register", (req,res) => {
-  pushUser(req.body.username , req.body.password);
-  console.log(req.body.username)
-  if(req.body.username == users.at(-1).username){
-    res.status(201).json(`Congratulations ${req.body.username} your account has been registered!`);
-  }else{
-    res.status(401).json(`Registration has been unsucessful, please try again.`);
+  if(users.find(user => user.username == req.body.username)){
+    res.status(401).json(`Username has been taken, choose another one`);    
   }
+  users.push({username : req.body.username , password : req.body.password});
+  res.status(201).json(`Congratulations ${req.body.username} your account has been registered!`);
 });
 
 public_users.get("/register", (req,res) => {
-  res.status(201).json(users[0]);
+  res.status(201).json(users);
 })
 
 
