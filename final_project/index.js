@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const session = require('express-session')
 const customer_routes = require('./router/auth_users.js').authenticated;
@@ -15,7 +16,7 @@ app.use("/customer/auth/*", function auth(req,res,next){
 //Write the authenication mechanism here
 });
  
-const PORT =5000;
+const PORT = 5000;
 
 app.use("/customer", customer_routes);
 app.use("/", genl_routes);

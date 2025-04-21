@@ -1,6 +1,10 @@
 GET http://localhost:5000
+
+
 ###
 GET http://localhost:5000/customer/login
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRGFycmVsbCIsImlhdCI6MTc0NTI1MTQ5OH0.xNttciwa28StZ-0ks2cbrMCskY_Aa9j8Ta-YuiKGMzo
+
 
 ###
 POST http://localhost:5000/customer/login
@@ -13,7 +17,6 @@ Content-Type: application/json
 
 ###
 POST http://localhost:5000/register
-
 Content-Type: application/json
 
 {

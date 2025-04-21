@@ -3,16 +3,34 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-const bycrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
-
-public_users.post("/register", (req,res) => {
-  if(users.find(user => user.username == req.body.username)){
-    res.status(401).json(`Username has been taken, choose another one`);    
+const encrypt = async password =>{
+  try{
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password , salt);
+    return hashedPassword;
+  }catch{
+    return false;
   }
-  users.push({username : req.body.username , password : req.body.password});
-  res.status(201).json(`Congratulations ${req.body.username} your account has been registered!`);
-});
+}
+
+public_users.post("/register", async (req,res) => {
+  const {username , password} = req.body;
+  if(!username || !password){
+    return res.status(401).json({error : "Fill in the username or password"})
+  }
+  if(users.find(user => user.username == username)){
+    return res.status(401).json({error: `Username has been taken, choose another one`});    
+  }
+  const hashed = await encrypt(password);
+  if(hashed == false){
+    return res.status(401).json({error: "Failed to encrypt password, try again later"});
+  }
+  users.push({username : username, password : hashed})
+  res.status(201).json(`Welcome ${username} your account has been successfully registered`);
+  }
+);
 
 public_users.get("/register", (req,res) => {
   res.status(201).json(users);
